@@ -1,5 +1,19 @@
 tasks = []
 
+def load_tasks():
+    try:
+        with open("tasks.txt", 'r') as file:
+            return [line.strip() for line in file.readlines()]
+    except FileNotFoundError:
+        return []
+    
+def save_tasks():
+    with open("tasks.txt", 'w') as file:
+        for task in tasks:
+            file.write(task + "\n")
+
+tasks = load_tasks()
+
 def display_tasks():
     if tasks:
         print("Your ToDo list:")
@@ -10,11 +24,13 @@ def display_tasks():
 
 def add_task(task):
     tasks.append(task)
+    save_tasks()
     print(f"Task {task} added to your ToDo list.")
 
 def remove_task(index):
     if index >= 1 and index <= len(tasks):
         removed_task = tasks.pop(index - 1)
+        save_tasks()
         print(f"Your task {removed_task} removed from your ToDo list.")
     else:
         print("Invalid task index!")
