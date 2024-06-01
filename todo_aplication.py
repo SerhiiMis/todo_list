@@ -1,6 +1,8 @@
 import os
 from datetime import datetime
-
+import tkinter as tk 
+from tkinter import messagebox 
+ 
 # Define the directory and file paths for storing tasks
 script_directory = os.path.dirname(os.path.abspath(__file__))
 TASKS_DIRECTORY = "data"
@@ -38,12 +40,13 @@ def save_tasks(tasks):
 # Function to display tasks
 def display_tasks(tasks):
     if tasks:
-        print("Your ToDo list:")
+        tasks_text = "Your ToDo list:"
         for index, (task, timestamp, priority) in enumerate(tasks, start=1):
             # Print each task with its details
-            print(f"{index}. {task} (Added at: {timestamp}) (Priority: {priority})\n")
+            tasks_text += f"{index}. {task} (Added at: {timestamp}) (Priority: {priority})\n"
+        messagebox.showinfo("Tasks", tasts_text)
     else:
-        print("Your ToDo list is empty!")
+        messagebox.showinfo("Tasks", "Your ToDo list is empty!")
 
 # Function to add a new task
 def add_task(tasks, task, priority=1):
@@ -53,9 +56,9 @@ def add_task(tasks, task, priority=1):
         tasks.append((task, timestamp, priority))
         # Save the updated tasks list
         save_tasks(tasks)
-        print(f"Task {task} added to your ToDo list.")
+        messagebox.showinfo('Info', f"Task {task} added to your ToDo list.")
     else:
-        print("Task description cannot be empty!")
+        messagebox.showerror('Error', "Task description cannot be empty!")
 
 # Function to remove a task
 def remove_task(tasks, index):
@@ -64,43 +67,69 @@ def remove_task(tasks, index):
         removed_task = tasks.pop(index - 1)
         # Save the updated tasks list
         save_tasks(tasks)
-        print(f"Your task {removed_task} removed from your ToDo list.")
+        messagebox.showinfo('Info', f"Your task {removed_task} removed from your ToDo list.")
     else:
-        print("Invalid task index!")
+        messagebox.showerror('Error', "Invalid task index!")
+
+
 
 # Main function to run the ToDo list application
 def main():
     # Load tasks from the file
     tasks = load_tasks()
     
-    # Main loop for user interaction
-    while True:
-        print("\nWhat would you like to do?")
-        print("1. Display ToDo list.")
-        print("2. Add task.")
-        print("3. Remove task.")
-        print("4. Exit.")
+    # Main GUI window
+    root = tk.Tk()
+    root.title("ToDo List")
 
-        choice = input("Enter your choice: ")
+    # Function for buttons
+    def add_button_click():
+        task = task_entry.get()
+        priority = int(priority_entry.get())
+        add_task(tasks, task, priority)
+        task_entry.delete(0, tk.END)
+        priority_entry.delete(0, tk.END)
 
-        if choice == '1':
-            display_tasks(tasks)
-        elif choice == '2':
-            task = input("Enter your task: ")
-            priority = int(input("Enter priority lewel (1 for lowest, 10 for highest)"))
-            add_task(tasks, task, priority)
-        elif choice == '3':
-            try:
-                index = int(input("Enter task index to remove:"))
-                remove_task(tasks, index)
-            except ValueError:
-                print("Invalid input! Plaese enter a valid task index.")
-        elif choice == '4':
-            print("Exiting ToDo list aplication. Good bye!")
-            break
-        else:
-            print("Invalid choice! Please enter a number between 1 and 4.")
+    def remove_button_click():
+        index = int(index_entry.get())
+        remove_task(tasks, index)
+        index_entry.delete(0, tk.END)
 
+    def display_button_click():
+        display_tasks(tasks)
+
+    # Widgets
+    task_label = tk.Label(root, text="Task:")
+    task_label.grid(row=0, column=0, padx=5, pady=5, sticky='w')
+
+    task_entry = tk.Entry(root, width=50)
+    task_entry.grid(row=0, column=1, padx=5, pady=5)
+
+    priority_label = tk.Label(root, text="Priority (1-10):")
+    priority_label.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+
+    priority_entry = tk.Entry(root, width=5)
+    priority_entry.grid(row=1, column=1, padx=5, pady=5)
+
+    add_button = tk.Button(root, text="Add Task", command=add_button_click)
+    add_button.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky="we")
+
+    index_label = tk.Label(root, text="Index to Remove:")
+    index_label.grid(row=3, column=0, padx=5, pady=5, sticky="w")
+
+    index_entry = tk.Entry(root, width=5)
+    index_entry.grid(row=3, column=1, padx=5, pady=5)
+
+    remove_button = tk.Button(root, text="Remove Task", command=remove_button_click)
+    remove_button.grid(row=4, column=0, columnspan=2, padx=5, pady=5, sticky="we")
+
+    display_button = tk.Button(root, text="Display Tasks", command=display_button_click)
+    display_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="we")
+
+    # Run the main loop
+    root.mainloop()
+
+    
 # Entry point of the script
 if __name__ == "__main__":
     main()
