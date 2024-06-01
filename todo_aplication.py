@@ -44,7 +44,7 @@ def display_tasks(tasks):
         for index, (task, timestamp, priority) in enumerate(tasks, start=1):
             # Print each task with its details
             tasks_text += f"{index}. {task} (Added at: {timestamp}) (Priority: {priority})\n"
-        messagebox.showinfo("Tasks", tasts_text)
+        messagebox.showinfo("Tasks", tasks_text)
     else:
         messagebox.showinfo("Tasks", "Your ToDo list is empty!")
 
@@ -71,7 +71,9 @@ def remove_task(tasks, index):
     else:
         messagebox.showerror('Error', "Invalid task index!")
 
-
+# Function to exit the aplication
+def exit_application(root):
+    root.quit()
 
 # Main function to run the ToDo list application
 def main():
@@ -126,6 +128,9 @@ def main():
     display_button = tk.Button(root, text="Display Tasks", command=display_button_click)
     display_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="we")
 
+    exit_button = tk.Button(root, text="Exit", command=lambda: exit_application(root))
+    exit_button.grid(row=6, column=0, columnspan=2, padx=5, pady=5, sticky='we')
+    
     # Run the main loop
     root.mainloop()
 

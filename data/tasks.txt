@@ -1,2 +1,2 @@
-write a program  (Added at: 01-06-2024) (Priority: 5
-write a math exercises  (Added at: 01-06-2024) (Priority: 7
+write a program  ( (Added at: 01-06-2024) (Priority: 5
+Creation and installation of special packages (Added at: 01-06-2024) (Priority: 10
