@@ -1,2 +1,2 @@
-write a program  ( (Added at: 01-06-2024) (Priority: 5
-Creation and installation of special packages (Added at: 01-06-2024) (Priority: 10
+Update the application 'ToDo'  Added at: 02-06-2024  Priority: 10
+Read the book Added at: 03-06-2024 Priority: 4

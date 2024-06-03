@@ -5,20 +5,20 @@ from tkinter import messagebox
  
 # Define the directory and file paths for storing tasks
 script_directory = os.path.dirname(os.path.abspath(__file__))
-TASKS_DIRECTORY = "data"
+TASKS_DIRECTORY = 'data'
 DATA_PATH = os.path.join(script_directory, TASKS_DIRECTORY)
-TASKS_FILE = os.path.join(DATA_PATH, "tasks.txt")
+TASKS_FILE = os.path.join(DATA_PATH, 'tasks.txt')
 
 # Function to load tasks from the file 
 def load_tasks():
-    tasks =[]
+    tasks = []
     try:
         with open(TASKS_FILE, 'r') as file:
             for line in file:
                 # Split each line to extract task, timestamp, and priority
                 task_data = line.strip().split("Added at: ")
                 task = task_data[0]
-                priority_data = task_data[1].split(") (Priority: ")
+                priority_data = task_data[1].split('Priority: ')
                 timestamp = priority_data[0]
                 priority = int(priority_data[1])
                 tasks.append((task, timestamp, priority))
@@ -30,10 +30,9 @@ def load_tasks():
 def save_tasks(tasks):
     try:
         os.makedirs(DATA_PATH, exist_ok=True)
-        
         with open(TASKS_FILE, 'w') as file:
             for task, timestamp, priority in tasks:
-                file.write(f"{task} (Added at: {timestamp}) (Priority: {priority}\n")
+                file.write(f"{task} Added at: {timestamp} Priority: {priority}\n")
     except Exception as e:
         print(f"An error occurred while saving tasks: {e}")
 
@@ -71,17 +70,22 @@ def remove_task(tasks, index):
     else:
         messagebox.showerror('Error', "Invalid task index!")
 
+# Function to search tasks
+def search_tasks(tasks, keyword):
+    results = [task for task in tasks if keyword.lower() in task[0].lower()]
+    if results:
+        display_tasks(results)
+    else:
+        messagebox.showinfo('Info', f"No tasks found with keyword: {keyword}")
+
 # Function to exit the aplication
 def exit_application(root):
     root.quit()
 
 # Main function to run the ToDo list application
 def main():
-    # Load tasks from the file
-    tasks = load_tasks()
-    
-    # Main GUI window
-    root = tk.Tk()
+    tasks = load_tasks() # Load tasks from the file
+    root = tk.Tk() # Main GUI window
     root.title("ToDo List")
 
     # Function for buttons
@@ -100,6 +104,11 @@ def main():
     def display_button_click():
         display_tasks(tasks)
 
+    def search_task_callback():
+        keyword = search_entry.get()
+        search_tasks(tasks, keyword)
+        search_entry.delete(0, tk.END)
+    
     # Widgets
     task_label = tk.Label(root, text="Task:")
     task_label.grid(row=0, column=0, padx=5, pady=5, sticky='w')
@@ -124,10 +133,19 @@ def main():
 
     remove_button = tk.Button(root, text="Remove Task", command=remove_button_click)
     remove_button.grid(row=4, column=0, columnspan=2, padx=5, pady=5, sticky="we")
-
+    
     display_button = tk.Button(root, text="Display Tasks", command=display_button_click)
     display_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="we")
+    
+    search_label = tk.Label(root, text="Search Task:")
+    search_label.grid(row=6, column=0, padx=5, pady=5, sticky='w')
+    
+    search_entry = tk.Entry(root, width=50)
+    search_entry.grid(row=6, column=1, padx=5, pady=5)
 
+    search_button = tk.Button(root, text="Search", command=search_task_callback)
+    search_button.grid(row=7, column=0, columnspan=2, padx=5, pady=5, sticky="we")
+    
     exit_button = tk.Button(root, text="Exit", command=lambda: exit_application(root))
     exit_button.grid(row=6, column=0, columnspan=2, padx=5, pady=5, sticky='we')
     
